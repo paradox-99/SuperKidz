@@ -1,9 +1,12 @@
+import Banner from "@/components/pages/home/Banner";
+import Products from "@/components/pages/home/Products";
 
 
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center">
-      <button className = 'btn btn-primary'>Click me</button>
+      <Banner />
+      <Products />
     </div>
   );
 }
