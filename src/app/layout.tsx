@@ -26,13 +26,11 @@ export default function RootLayout({
       className={`${poppins.className} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <header className="py-2 md:w-11/12 mx-auto">
+        <header className="sticky top-0 z-50 w-full bg-base-100 shadow-sm">
           <Navbar />
         </header>
-        <main className="py-2 md:w-11/12 mx-auto">{children}</main>
-        <footer>
+        <main className="py-2 md:w-11/12 mx-auto min-h-[calc(100vh-301px)]">{children}</main>
           <Footer />
-        </footer>
       </body>
 
     </html>
