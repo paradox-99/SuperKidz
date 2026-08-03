@@ -2,10 +2,16 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 const uri = process.env.MONGODB_URI || "";
 const dbName = process.env.DB_NAME || "";
 
-const collections = {
-  users: "users",
-  products: "products",
-  orders: "orders",
+interface Collections {
+  USERS: string;
+  PRODUCTS: string;
+  ORDERS: string;
+};
+
+export const collections: Collections = {
+  USERS: "users",
+  PRODUCTS: "products",
+  ORDERS: "orders",
 };
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version

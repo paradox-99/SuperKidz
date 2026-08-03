@@ -4,7 +4,7 @@ import Products from "@/components/pages/home/Products";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center">
+    <div className="flex flex-col flex-1 items-center justify-center space-y-20">
       <Banner />
       <Products />
     </div>

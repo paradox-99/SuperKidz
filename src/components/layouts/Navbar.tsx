@@ -13,8 +13,8 @@ const Navbar = () => {
 
       const navigation: NavigationProps[] = [
             { title: "Home", url: "/" },
+            { title: "Products", url: "/products" },
             { title: "About", url: "/about" },
-            { title: "Services", url: "/services" },
             { title: "Contact", url: "/contact" },
       ];
 
