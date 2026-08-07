@@ -21,9 +21,9 @@ const HOME_PREVIEW = 'https://ibb.co/Z62sBWxt';
 const LOGO_IMAGE = 'https://ibb.co/Q7wfrxDD';
 
 export const metadata: Metadata = {
-  metadataBase: BASE_URL,
+  metadataBase: new URL(BASE_URL),
   title: {
-    default: 'SuperKidz',
+    default: 'SuperKidz | Safe, Fun, and Educational Toys for Kids',
     template: '%s | SuperKidz'
   },
   description:
@@ -35,7 +35,16 @@ export const metadata: Metadata = {
     'learning toys',
     'SuperKidz',
     'children gifts',
-    'STEM toys'
+    'STEM toys',
+    'puzzles',
+    'building sets',
+    'creative play',
+    'safe toys',
+    'fun toys',
+    'playful learning',
+    'toys for toddlers',
+    'toys for preschoolers',
+    'toys for school-age kids'
   ],
   authors: [
     { name: 'SuperKidz', url: BASE_URL },
@@ -46,7 +55,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    nocache: false,
     googleBot: {
       index: true,
       follow: true,
@@ -65,13 +73,13 @@ export const metadata: Metadata = {
     shortcut: LOGO_IMAGE
   },
   openGraph: {
-    title: 'SuperKidz',
-    description:
-      'SuperKidz — safe, fun, and educational toys for curious kids. Browse top picks and reliable favorites.',
+    type: 'website',
+    locale: 'en_US',
     url: BASE_URL,
     siteName: 'SuperKidz',
-    locale: 'en_US',
-    type: 'website',
+    title: 'SuperKidz | Safe, Fun, and Educational Toys for Kids',
+    description:
+      'SuperKidz — safe, fun, and educational toys for curious kids. Browse top picks and reliable favorites.',
     images: [
       {
         url: HOME_PREVIEW,
@@ -89,13 +97,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SuperKidz',
+    title: 'SuperKidz | Safe, Fun, and Educational Toys for Kids',
     description:
       'SuperKidz — safe, fun, and educational toys for curious kids.',
     images: [HOME_PREVIEW],
     site: '@superkidz', // replace with your official handle
     creator: '@superkidz'
-  }
+  },
+  category: "E-commerce, Toys, Educational Products",
 };
 
 export default function RootLayout({
