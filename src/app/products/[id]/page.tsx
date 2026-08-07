@@ -11,6 +11,7 @@ import {
       FiStar,
 } from "react-icons/fi";
 import { getProductById } from "@/actions/server/product";
+import CartButton from "@/components/buttons/CartButton";
 
 type ProductDetailsProps = {
       params: Promise<{ id: string }>;
@@ -157,9 +158,7 @@ const page = async ({ params }: ProductDetailsProps) => {
                               </div>
 
                               <div className="grid gap-3 sm:grid-cols-2">
-                                    <button className="btn btn-primary btn-lg">
-                                          <FiShoppingBag /> Add to Cart
-                                    </button>
+                                    <CartButton product={product} />
                                     <button className="btn btn-outline btn-lg">Buy Now</button>
                               </div>
 

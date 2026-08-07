@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import Image from "next/image";
 import Link from "next/link";
 import { FiStar, FiShoppingBag } from "react-icons/fi";
+import CartButton from "../buttons/CartButton";
 
 export interface ProductCardProps {
       id: ObjectId;
@@ -67,10 +68,8 @@ const ProductCards = ({id, title, image, ratings, reviews, price, sold }: Produc
                                     <p className="text-lg font-bold text-base-content">{sold} pcs</p>
                               </div>
                         </div>
-                        <div className="flex flex-col gap-3 pt-4 md:flex-row md:justify-between">
-                              <button className="btn btn-primary btn-outline w-1/2">
-                                    Add to Cart
-                              </button>
+                        <div className="flex flex-col gap-3 pt-4 md:flex-row md:justify-between w-full">
+                              <CartButton product={{id: id.toString(), title, image, ratings, reviews, price, sold}} />
                               <Link href={`/products/${id}`} className="btn btn-info btn-outline w-1/2">
                                     Details
                               </Link>

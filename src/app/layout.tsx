@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
 import localFont from "next/font/local";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -118,10 +119,13 @@ export default function RootLayout({
       className={`${poppins.className} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <Toaster />
         <header className="sticky top-0 z-50 w-full bg-base-100 shadow-sm">
           <Navbar />
         </header>
-        <main className="py-2 md:w-11/12 mx-auto min-h-[calc(100vh-301px)]">{children}</main>
+        <main className="py-2 md:w-11/12 mx-auto min-h-[calc(100vh-301px)]">
+        {children}
+        </main>
         <Footer />
       </body>
 

@@ -1,8 +1,40 @@
+'use client';
+import { postUser } from "@/actions/server/auth";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { FiMail, FiLock, FiUser } from "react-icons/fi";
 
 const SignupPage = () => {
+
+      const params = useSearchParams();
+      const router = useRouter();
+      const callbackUrl = params.get("callbackUrl") || "/";
+
+      const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            // Handle form submission logic here
+
+            const name = (e.currentTarget.elements.namedItem("name") as HTMLInputElement).value;
+            const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
+            const password = (e.currentTarget.elements.namedItem("password") as HTMLInputElement).value;
+
+            const userData = {
+                  name,
+                  email,
+                  password,
+            };
+
+            const response = await postUser(userData);
+
+            if(response.status === "success") {
+                  toast.success("Account created successfully!");
+                  router.push(callbackUrl);
+            }
+            
+      };
+
       return (
             <section className="flex min-h-[90vh] items-center justify-center px-4 py-10">
                   <div className="w-full max-w-5xl overflow-hidden rounded-4xl border border-base-200 bg-base-100 shadow-2xl">
@@ -41,20 +73,20 @@ const SignupPage = () => {
                                                 </p>
                                           </div>
 
-                                          <form className="space-y-4">
+                                          <form className="space-y-4" onSubmit={handleSubmit}>
                                                 <label className="input input-bordered flex items-center gap-2">
                                                       <FiUser className="text-base-content/60" />
-                                                      <input type="text" className="grow" placeholder="Full name" />
+                                                      <input type="text" className="grow" placeholder="Full name" name="name" />
                                                 </label>
 
                                                 <label className="input input-bordered flex items-center gap-2">
                                                       <FiMail className="text-base-content/60" />
-                                                      <input type="email" className="grow" placeholder="Email address" />
+                                                      <input type="email" className="grow" placeholder="Email address" name="email" />
                                                 </label>
 
                                                 <label className="input input-bordered flex items-center gap-2">
                                                       <FiLock className="text-base-content/60" />
-                                                      <input type="password" className="grow" placeholder="Password" />
+                                                      <input type="password" className="grow" placeholder="Password" name="password" />
                                                 </label>
 
                                                 <button type="submit" className="btn btn-primary w-full">
