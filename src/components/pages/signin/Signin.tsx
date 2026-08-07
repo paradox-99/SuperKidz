@@ -1,39 +1,37 @@
 'use client';
-import { postUser } from "@/actions/server/auth";
 import GoogleButton from "@/components/buttons/GoogleButton";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { FiMail, FiLock, FiUser } from "react-icons/fi";
+import { FiMail, FiLock } from "react-icons/fi";
 
-const SignupPage = () => {
+const Signin = () => {
 
-      const params = useSearchParams();
       const router = useRouter();
+      const params = useSearchParams();
       const callbackUrl = params.get("callbackUrl") || "/";
+      
 
       const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
             e.preventDefault();
-            // Handle form submission logic here
 
-            const name = (e.currentTarget.elements.namedItem("name") as HTMLInputElement).value;
             const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
             const password = (e.currentTarget.elements.namedItem("password") as HTMLInputElement).value;
 
-            const userData = {
-                  name,
+            const result = await signIn("credentials", {
                   email,
                   password,
-            };
+                  redirect: false,
+                  callbackUrl: callbackUrl,
+            });
 
-            const response = await postUser(userData);
-
-            if(response.status === "success") {
-                  toast.success("Account created successfully!");
+            if (result?.ok) {
                   router.push(callbackUrl);
+            } else {
+                  toast.error("Invalid email or password. Please try again.");
             }
-            
-      };
+      }
 
       return (
             <section className="flex min-h-[90vh] items-center justify-center px-4 py-10">
@@ -43,22 +41,22 @@ const SignupPage = () => {
                                     <div className="flex h-full flex-col justify-between">
                                           <div>
                                                 <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] opacity-80">
-                                                      Welcome aboard
+                                                      Welcome back
                                                 </p>
                                                 <h1 className="text-3xl font-black leading-tight md:text-4xl">
-                                                      Create your SuperKidz account
+                                                      Sign in to your SuperKidz account
                                                 </h1>
                                                 <p className="mt-4 max-w-md text-base opacity-90">
-                                                      Join thousands of parents and kids discovering joyful, educational toys.
+                                                      Continue exploring educational toys and fun learning essentials for your child.
                                                 </p>
                                           </div>
 
                                           <div className="mt-8 rounded-3xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm">
-                                                <p className="text-sm font-semibold">Why sign up?</p>
+                                                <p className="text-sm font-semibold">What you can do</p>
                                                 <ul className="mt-3 space-y-2 text-sm opacity-90">
-                                                      <li>• Save favorites and wishlist items</li>
-                                                      <li>• Get updates on new toy arrivals</li>
-                                                      <li>• Enjoy a smoother shopping experience</li>
+                                                      <li>• Track your favorite picks</li>
+                                                      <li>• Review product details quickly</li>
+                                                      <li>• Stay updated on new arrivals</li>
                                                 </ul>
                                           </div>
                                     </div>
@@ -67,30 +65,25 @@ const SignupPage = () => {
                               <div className="p-6 sm:p-8 md:p-10 lg:p-12">
                                     <div className="mx-auto max-w-md">
                                           <div className="mb-8 text-center lg:text-left">
-                                                <h2 className="text-2xl font-black">Sign up</h2>
+                                                <h2 className="text-2xl font-black">Sign in</h2>
                                                 <p className="mt-2 text-sm text-base-content/70">
-                                                      Fill in your details to get started.
+                                                      Use your email and password to continue.
                                                 </p>
                                           </div>
 
                                           <form className="space-y-4" onSubmit={handleSubmit}>
                                                 <label className="input input-bordered flex items-center gap-2">
-                                                      <FiUser className="text-base-content/60" />
-                                                      <input type="text" className="grow" placeholder="Full name" name="name" />
-                                                </label>
-
-                                                <label className="input input-bordered flex items-center gap-2">
                                                       <FiMail className="text-base-content/60" />
-                                                      <input type="email" className="grow" placeholder="Email address" name="email" />
+                                                      <input name="email" type="email" className="grow" placeholder="Email address" />
                                                 </label>
 
                                                 <label className="input input-bordered flex items-center gap-2">
                                                       <FiLock className="text-base-content/60" />
-                                                      <input type="password" className="grow" placeholder="Password" name="password" />
+                                                      <input name="password" type="password" className="grow" placeholder="Password" />
                                                 </label>
 
                                                 <button type="submit" className="btn btn-primary w-full">
-                                                      Create account
+                                                      Sign in
                                                 </button>
                                           </form>
 
@@ -103,9 +96,9 @@ const SignupPage = () => {
                                           <GoogleButton />
 
                                           <p className="mt-6 text-center text-sm text-base-content/70">
-                                                Already have an account?{' '}
-                                                <Link href="/signin" className="font-semibold text-primary hover:underline">
-                                                      Sign in
+                                                Don&apos;t have an account?{' '}
+                                                <Link href={`/signup?callbackUrl=${callbackUrl}`} className="font-semibold text-primary hover:underline">
+                                                      Sign up
                                                 </Link>
                                           </p>
                                     </div>
@@ -116,4 +109,4 @@ const SignupPage = () => {
       );
 };
 
-export default SignupPage;
+export default Signin;

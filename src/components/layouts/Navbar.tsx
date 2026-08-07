@@ -2,6 +2,7 @@ import Link from "next/link";
 import NavButton from "../buttons/NavButton";
 import Logo from "./Logo";
 import { FiShoppingCart } from "react-icons/fi";
+import AuthButton from "../buttons/AuthButton";
 
 interface NavigationProps {
       title?: string;
@@ -50,7 +51,7 @@ const Navbar = () => {
                   </div>
                   <div className="navbar-end">
                         <Link href = 'cart' className="btn btn-ghost mx-4"><FiShoppingCart /></Link>
-                        <Link href="/signin" className="btn btn-primary">Sign In</Link>
+                        <AuthButton />
                   </div>
             </div>
       );

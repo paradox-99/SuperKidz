@@ -18,6 +18,7 @@ const Banner = () => {
                               src={"/assets/hero.png"}
                               width={500}
                               height={400}
+                              unoptimized
                         ></Image>
                   </div>
             </div>

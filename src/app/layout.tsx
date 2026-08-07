@@ -1,16 +1,10 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-poppins",
-});
+import NextAuthProvider from "@/provider/NextAuthProvider";
 
 export const fontBangla = localFont({
   src: "../fonts/mayaboti-normal.ttf",
@@ -64,10 +58,6 @@ export const metadata: Metadata = {
       'max-snippet': -1
     }
   },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f172a' }
-  ],
   icons: {
     icon: LOGO_IMAGE || 'https://i.ibb.co/PsHNwVDD/image.png',
     apple: LOGO_IMAGE || 'https://i.ibb.co/PsHNwVDD/image.png',
@@ -108,27 +98,35 @@ export const metadata: Metadata = {
   category: "E-commerce, Toys, Educational Products",
 };
 
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' }
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${poppins.className} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <Toaster />
-        <header className="sticky top-0 z-50 w-full bg-base-100 shadow-sm">
-          <Navbar />
-        </header>
-        <main className="py-2 md:w-11/12 mx-auto min-h-[calc(100vh-301px)]">
-        {children}
-        </main>
-        <Footer />
-      </body>
-
-    </html>
+    <NextAuthProvider>
+      <html
+        lang="en"
+        className="h-full antialiased"
+      >
+        <body className="min-h-full flex flex-col" suppressHydrationWarning>
+          <Toaster />
+          <header className="sticky top-0 z-50 w-full bg-base-100 shadow-sm">
+            <Navbar />
+          </header>
+          <main className="py-2 md:w-11/12 mx-auto min-h-[calc(100vh-301px)]">
+            {children}
+          </main>
+          <Footer />
+        </body>
+      </html>
+    </NextAuthProvider>
   );
 }

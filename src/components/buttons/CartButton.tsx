@@ -1,16 +1,19 @@
 'use client';
 
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 
-const CartButton = ({ product }) => {
+const CartButton = ({ product }: {product: any}) => {
 
       const router = useRouter();
+      const session = useSession();
+      const path = usePathname();
+      const isValid = session.status === 'authenticated';
 
-      const isValid = false; // Replace with actual validation logic
 
       const handleAddToCart = () => {
             if (!isValid) {
-                  router.push('/signup');
+                  router.push('/signin?callbackUrl=' + path);
             }
       };
 

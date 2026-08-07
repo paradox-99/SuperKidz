@@ -1,11 +1,10 @@
-import { ObjectId } from "mongodb";
 import Image from "next/image";
 import Link from "next/link";
 import { FiStar, FiShoppingBag } from "react-icons/fi";
 import CartButton from "../buttons/CartButton";
 
 export interface ProductCardProps {
-      id: ObjectId;
+      id: string;
       title: string;
       image: string;
       ratings: number;
@@ -24,6 +23,7 @@ const ProductCards = ({id, title, image, ratings, reviews, price, sold }: Produc
                               alt={title}
                               fill
                               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                              unoptimized
                               className="object-cover transition duration-500 group-hover:scale-105"
                         />
                         <div className="absolute inset-x-4 top-4 flex items-center justify-between">

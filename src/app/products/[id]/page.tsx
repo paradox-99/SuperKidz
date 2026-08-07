@@ -7,7 +7,6 @@ import {
       FiCheckCircle,
       FiMessageSquare,
       FiPackage,
-      FiShoppingBag,
       FiStar,
 } from "react-icons/fi";
 import { getProductById } from "@/actions/server/product";
@@ -43,7 +42,7 @@ export async function generateMetadata({ params }: ProductDetailsProps): Promise
                   "educational toy",
                   "kids toy",
                   "learning toy",
-            ].filter(Boolean),
+            ].filter((keyword): keyword is string => Boolean(keyword)),
             alternates: {
                   canonical: `/products/${id}`,
             },
@@ -99,6 +98,7 @@ const page = async ({ params }: ProductDetailsProps) => {
                                                 fill
                                                 priority
                                                 sizes="(max-width: 1024px) 100vw, 50vw"
+                                                unoptimized
                                                 className="object-cover"
                                           />
                                           <div className="absolute inset-x-4 top-4 flex items-center justify-between">

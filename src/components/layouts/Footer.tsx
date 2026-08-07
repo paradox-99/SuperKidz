@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 
 const Footer = () => {
@@ -7,11 +6,12 @@ const Footer = () => {
             <footer className="footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
                   <aside>
                         <Link href="/" className="flex flex-col items-center gap-2">
-                              <Image
+                              <img
                                     src="/assets/logo.png"
                                     alt="Logo"
                                     width={50}
                                     height={50}
+                                    className="h-12 w-auto"
                               />
                               <h2 className="text-xl font-bold">Super <span className="text-primary">Kidz</span></h2>
                         </Link>
