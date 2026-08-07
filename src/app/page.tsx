@@ -3,7 +3,7 @@ import Products from "@/components/pages/home/Products";
 import { Metadata } from "next";
 
 const BASE_URL = 'https://super-kidz-tau.vercel.app';
-const HOME_PREVIEW = 'https://ibb.co/Z62sBWxt';
+const HOME_PREVIEW = 'https://i.ibb.co/TBWX4mtp/Screenshot-from-2026-08-06-23-26-21.png';
 
 export const metadata: Metadata = {
   title: 'Playful toys that spark learning',

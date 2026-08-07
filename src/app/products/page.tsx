@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Products from '@/components/pages/home/Products';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://super-kidz-tau.vercel.app';
-const PRODUCT_PREVIEW = 'https://ibb.co/BV4KcSpg';
+const PRODUCT_PREVIEW = 'https://i.ibb.co/0jBVmd7f/image.png';
 
 export function productMetadata(product: {
   title: string;

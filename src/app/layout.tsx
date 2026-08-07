@@ -17,8 +17,8 @@ export const fontBangla = localFont({
 
 // Replace metadataBase with your real production origin.
 const BASE_URL = 'https://super-kidz-tau.vercel.app';
-const HOME_PREVIEW = 'https://ibb.co/Z62sBWxt';
-const LOGO_IMAGE = 'https://ibb.co/Q7wfrxDD';
+const HOME_PREVIEW = 'https://i.ibb.co/TBWX4mtp/Screenshot-from-2026-08-06-23-26-21.png';
+const LOGO_IMAGE = 'https://i.ibb.co/PsHNwVDD/image.png';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: '%s | SuperKidz'
   },
   description:
-    'SuperKidz — safe, fun, and educational toys for curious kids. Hand-selected products, fast delivery, and playful learning tools for ages 0-10.',
+    'SuperKidz — safe, fun, and educational toys for curious kids. Hand-selected products, fast delivery, and playful learning tools for ages 0-10. Shop now for top picks and reliable favorites.',
   keywords: [
     'toys',
     'educational toys',
@@ -68,9 +68,9 @@ export const metadata: Metadata = {
     { media: '(prefers-color-scheme: dark)', color: '#0f172a' }
   ],
   icons: {
-    icon: LOGO_IMAGE,
-    apple: LOGO_IMAGE,
-    shortcut: LOGO_IMAGE
+    icon: LOGO_IMAGE || 'https://i.ibb.co/PsHNwVDD/image.png',
+    apple: LOGO_IMAGE || 'https://i.ibb.co/PsHNwVDD/image.png',
+    shortcut: LOGO_IMAGE || 'https://i.ibb.co/PsHNwVDD/image.png'
   },
   openGraph: {
     type: 'website',
@@ -79,16 +79,16 @@ export const metadata: Metadata = {
     siteName: 'SuperKidz',
     title: 'SuperKidz | Safe, Fun, and Educational Toys for Kids',
     description:
-      'SuperKidz — safe, fun, and educational toys for curious kids. Browse top picks and reliable favorites.',
+      'SuperKidz — safe, fun, and educational toys for curious kids. Browse top picks and reliable favorites. Shop now for playful learning tools for ages 0-10. Shop now for top picks and reliable favorites.',
     images: [
       {
-        url: HOME_PREVIEW,
+        url: HOME_PREVIEW || 'https://i.ibb.co/TBWX4mtp/Screenshot-from-2026-08-06-23-26-21.png',
         alt: 'SuperKidz — Home preview',
         width: 1280,
         height: 720
       },
       {
-        url: LOGO_IMAGE,
+        url: LOGO_IMAGE || 'https://i.ibb.co/PsHNwVDD/image.png',
         alt: 'SuperKidz logo',
         width: 512,
         height: 512
@@ -99,8 +99,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'SuperKidz | Safe, Fun, and Educational Toys for Kids',
     description:
-      'SuperKidz — safe, fun, and educational toys for curious kids.',
-    images: [HOME_PREVIEW],
+      'SuperKidz — safe, fun, and educational toys for curious kids. Browse top picks and reliable favorites. Shop now for playful learning tools for ages 0-10. Shop now for top picks and reliable favorites.',
+    images: [HOME_PREVIEW || 'https://i.ibb.co/TBWX4mtp/Screenshot-from-2026-08-06-23-26-21.png'],
     site: '@superkidz', // replace with your official handle
     creator: '@superkidz'
   },
