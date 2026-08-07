@@ -50,7 +50,7 @@ const Navbar = () => {
                   </div>
                   <div className="navbar-end">
                         <Link href = 'cart' className="btn btn-ghost mx-4"><FiShoppingCart /></Link>
-                        <Link href="/login" className="btn btn-primary">Login</Link>
+                        <Link href="/signin" className="btn btn-primary">Sign In</Link>
                   </div>
             </div>
       );
