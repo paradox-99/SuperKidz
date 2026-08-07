@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,6 +15,54 @@ import { getProductById } from "@/actions/server/product";
 type ProductDetailsProps = {
       params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({ params }: ProductDetailsProps): Promise<Metadata> {
+      const { id } = await params;
+      const product = await getProductById(id);
+
+      if (!product) {
+            return {
+                  title: "Product not found",
+                  description: "The requested product could not be found.",
+            };
+      }
+
+      const title = `${product.title} | SuperKidz`;
+      const description = product.description
+            ? product.description.replace(/\s+/g, " ").trim().slice(0, 160)
+            : `Explore ${product.title} at SuperKidz.`;
+
+      return {
+            title,
+            description,
+            keywords: [
+                  product.title,
+                  product.bangla,
+                  "SuperKidz",
+                  "educational toy",
+                  "kids toy",
+                  "learning toy",
+            ].filter(Boolean),
+            alternates: {
+                  canonical: `/products/${id}`,
+            },
+            openGraph: {
+                  title,
+                  description,
+                  type: "website",
+                  url: `/products/${id}`,
+                  images: product.image
+                        ? [{ url: product.image, alt: product.title, width: 1200, height: 630 }]
+                        : undefined,
+            },
+            twitter: {
+                  card: "summary_large_image",
+                  title,
+                  description,
+                  images: product.image ? [product.image] : undefined,
+            },
+      };
+}
 
 const page = async ({ params }: ProductDetailsProps) => {
       const { id } = await params;

@@ -8,11 +8,11 @@ const HOME_PREVIEW = 'https://i.ibb.co/TBWX4mtp/Screenshot-from-2026-08-06-23-26
 export const metadata: Metadata = {
   title: 'Playful toys that spark learning',
   description:
-    'Discover smartly curated educational toys, safe materials, and joyful designs at SuperKidz.',
+    'Discover smartly curated educational toys, safe materials, and joyful designs at SuperKidz. Shop now for playful learning tools for ages 0-10. Browse top picks and reliable favorites.',
   openGraph: {
     title: 'SuperKidz - Toys that spark learning',
     description:
-      'Discover smartly curated educational toys, safe materials, and joyful designs.',
+      'Discover smartly curated educational toys, safe materials, and joyful designs. Shop now for playful learning tools for ages 0-10. Browse top picks and reliable favorites.',
     url: BASE_URL + '/',
     images: [
       {
