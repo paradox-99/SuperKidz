@@ -6,12 +6,14 @@ interface Collections {
   USERS: string;
   PRODUCTS: string;
   ORDERS: string;
+  CART: string;
 };
 
 export const collections: Collections = {
   USERS: "users",
   PRODUCTS: "products",
   ORDERS: "orders",
+  CART: "cart",
 };
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version

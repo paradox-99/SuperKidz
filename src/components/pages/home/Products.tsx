@@ -37,6 +37,7 @@ const Products = async () => {
                                     reviews={product.reviews}
                                     price={product.price}
                                     sold={product.sold}
+                                    discount={product.discount}
                               />
                         ))}
                   </div>

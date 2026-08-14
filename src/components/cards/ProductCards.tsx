@@ -11,9 +11,10 @@ export interface ProductCardProps {
       reviews: number;
       price: number;
       sold: number;
+      discount?: number;
 }
 
-const ProductCards = ({id, title, image, ratings, reviews, price, sold }: ProductCardProps) => {
+const ProductCards = ({id, title, image, ratings, reviews, price, sold, discount }: ProductCardProps) => {
 
       return (
             <article className="card group overflow-hidden border border-base-200 bg-base-100 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
@@ -69,7 +70,7 @@ const ProductCards = ({id, title, image, ratings, reviews, price, sold }: Produc
                               </div>
                         </div>
                         <div className="flex flex-col gap-3 pt-4 md:flex-row md:justify-between w-full">
-                              <CartButton product={{id: id.toString(), title, image, ratings, reviews, price, sold}} />
+                              <CartButton product={{id: id.toString(), title, image, price, discount}} />
                               <Link href={`/products/${id}`} className="btn btn-info btn-outline w-1/2">
                                     Details
                               </Link>

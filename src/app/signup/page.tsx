@@ -1,6 +1,7 @@
 'use client';
 import { postUser } from "@/actions/server/auth";
 import GoogleButton from "@/components/buttons/GoogleButton";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
@@ -30,7 +31,12 @@ const SignupPage = () => {
 
             if(response.status === "success") {
                   toast.success("Account created successfully!");
-                  router.push(callbackUrl);
+                  // router.push(callbackUrl);
+                  const result = await signIn("credentials", {
+                        email,
+                        password,
+                        callbackUrl
+                  });
             }
             
       };

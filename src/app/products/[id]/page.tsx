@@ -158,7 +158,7 @@ const page = async ({ params }: ProductDetailsProps) => {
                               </div>
 
                               <div className="grid gap-3 sm:grid-cols-2">
-                                    <CartButton product={product} />
+                                    <CartButton product={{id: id.toString(), title: product.title, image: product.image, price: product.price, discount: product.discount}} />
                                     <button className="btn btn-outline btn-lg">Buy Now</button>
                               </div>
 

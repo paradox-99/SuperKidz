@@ -1,6 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { signInUser } from "@/actions/server/auth";
+import { getCollection } from "./dbConfig";
 
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -30,10 +31,63 @@ export const authOptions = {
         return user;
       }
     }),
-    
+
     GoogleProvider({
       clientId: clientId,
       clientSecret: clientSecret
     })
-  ]
+  ],
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+
+      const isExistingUser = await getCollection("USERS").findOne({ email: user.email });
+      if (!isExistingUser) {
+        // Create a new user
+        const result = await getCollection("USERS").insertOne({
+          provider: account?.provider,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+          role: "user",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
+        return result.acknowledged; // Return true if the user was created successfully
+      }
+
+      return true;
+
+    },
+    // async redirect({ url, baseUrl }) {
+    //   return baseUrl
+    // },
+    async session({ session, token, user }) {
+      // console.log("User in session callback:", user);
+      if (token) {
+        session.id = token?.id;
+        session.role = token?.role;
+        if (session.user) {
+          session.user.id = token?.id;
+          session.user.role = token?.role;
+        }
+      }
+      return session
+    },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      // console.log("User in JWT callback:", user);
+      // console.log("Token in JWT callback:", token);
+
+      if (user) {
+        if (account?.provider === "google") {
+          const dbUser = await getCollection("USERS").findOne({ email: user.email });
+          token.id = dbUser?._id.toString();
+          token.role = dbUser?.role;
+        } else {
+          token.id = user?.id;
+          token.role = user?.role;
+        }
+      }
+      return token
+    }
+  }
 }
