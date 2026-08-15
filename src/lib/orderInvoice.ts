@@ -46,7 +46,7 @@ const buildInvoiceHtml = (order: InvoiceOrder, recipientName: string) => {
 
       return `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1f2937;">
-            <h1 style="color:#ea580c;margin-bottom:4px;">SuperKidz</h1>
+            <img src="https://i.ibb.co/PsHNwVDD/image.png" alt="SuperKidz" style="height:40px;width:auto;margin-bottom:12px;" />
             <p>Hi ${recipientName},</p>
             <p>Thanks for your order! Here's your invoice.</p>
 
