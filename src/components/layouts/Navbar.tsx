@@ -3,6 +3,9 @@ import NavButton from "../buttons/NavButton";
 import Logo from "./Logo";
 import { FiShoppingCart } from "react-icons/fi";
 import AuthButton from "../buttons/AuthButton";
+import { getCartItemCountByUserId } from "@/actions/server/cart";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 interface NavigationProps {
       title?: string;
@@ -10,7 +13,10 @@ interface NavigationProps {
 }
 
 
-const Navbar = () => {
+const Navbar = async () => {
+
+      const session = await getServerSession(authOptions);
+      const cartItemCount = session?.user?.id ? await getCartItemCountByUserId(session.user.id) : 0;
 
       const navigation: NavigationProps[] = [
             { title: "Home", url: "/" },
@@ -50,7 +56,12 @@ const Navbar = () => {
                         </ul>
                   </div>
                   <div className="navbar-end">
-                        <Link href = 'cart' className="btn btn-ghost mx-4"><FiShoppingCart /></Link>
+                        <div className="indicator mr-10">
+                              {
+                                    cartItemCount > 0 && <span className="indicator-item py-0.5 px-2 rounded-full status-success text-white text-[8px]">{cartItemCount}</span>
+                              }
+                              <div className="btn btn-sm"><Link href='cart' className=""><FiShoppingCart /></Link></div>
+                        </div>
                         <AuthButton />
                   </div>
             </div>
