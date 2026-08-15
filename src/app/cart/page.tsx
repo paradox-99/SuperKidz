@@ -119,14 +119,9 @@ const CartPage = async () => {
                                     <span className="text-primary">৳{subtotal.toFixed(2)}</span>
                               </div>
 
-                              <button
-                                    type="button"
-                                    className="btn btn-primary btn-block btn-lg"
-                                    disabled
-                                    title="Checkout coming soon"
-                              >
+                              <Link href="/checkout" className="btn btn-primary btn-block btn-lg">
                                     Proceed to Checkout
-                              </button>
+                              </Link>
                         </aside>
                   </div>
             </section>

@@ -30,11 +30,8 @@ export const getCartItemsByUserId = async (userId: string) => {
 
 export const addToCart = async (productId: string, quantity: number, image: string, name: string, price: number) => {
 
-      const { user } = await getServerSession(authOptions);
-
-      console.log("User from session:", user);
-      console.log("Product ID:", productId);
-
+      const session = await getServerSession(authOptions);
+      const user = session?.user;
 
       if (!user) {
             throw new Error("User not authenticated");

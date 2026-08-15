@@ -11,22 +11,27 @@ const CartButton = ({ product }: {product: {id: string, title: string, image: st
       const router = useRouter();
       const session = useSession();
       const path = usePathname();
-      const isValid = session.status === 'authenticated';
       const [loading, setLoading] = useState(false);
 
 
       const handleAddToCart = async () => {
-            if (!isValid) {
+            if (session.status === 'unauthenticated') {
                   router.push('/signin?callbackUrl=' + path);
+                  return;
             }
 
             setLoading(true);
-            const discountedPrice = product.discount ? product.price - (product.price * (product.discount / 100)) : product.price;
-            const result = await addToCart( product.id, 1, product.image, product.title, discountedPrice);
-            setLoading(false);
-            if (result.status === "success") {
-                  toast.success("Item added to cart");
-                  router.refresh();
+            try {
+                  const discountedPrice = product.discount ? product.price - (product.price * (product.discount / 100)) : product.price;
+                  const result = await addToCart(product.id, 1, product.image, product.title, discountedPrice);
+                  if (result.status === "success") {
+                        toast.success("Item added to cart");
+                        router.refresh();
+                  }
+            } catch (error) {
+                  toast.error(error instanceof Error ? error.message : "Could not add item to cart");
+            } finally {
+                  setLoading(false);
             }
       };
 
