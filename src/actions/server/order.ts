@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { getCollection } from "@/lib/dbConfig";
 import { ObjectId } from "mongodb";
+import { sendOrderInvoiceEmail } from "@/lib/orderInvoice";
 
 export type ShippingInfo = {
       fullName: string;
@@ -95,6 +96,26 @@ export const createOrder = async (shippingInfo: ShippingInfo) => {
             const result = await getCollection("ORDERS").insertOne(order);
             await getCollection("CART").deleteMany({ userId: new ObjectId(user.id) });
 
+            if (user.email) {
+                  try {
+                        await sendOrderInvoiceEmail(
+                              {
+                                    _id: result.insertedId.toString(),
+                                    items: order.items,
+                                    subtotal: order.subtotal,
+                                    total: order.total,
+                                    shippingInfo: order.shippingInfo,
+                                    status: order.status,
+                                    createdAt: order.createdAt,
+                              },
+                              user.email,
+                              user.name || shippingInfo.fullName
+                        );
+                  } catch (error) {
+                        console.error("Failed to send order invoice email:", error);
+                  }
+            }
+
             return { status: "success", orderId: result.insertedId.toString() };
       } catch (error) {
             console.error("Error creating order:", error);
@@ -124,6 +145,20 @@ export const getOrderById = async (orderId: string) => {
       }
 
       return normalizeOrder(order as unknown as OrderRecord);
+}
+
+export const resendOrderInvoice = async (orderId: string) => {
+      const { user } = await getServerSession(authOptions) ?? {};
+
+      if (!user?.email) {
+            throw new Error("User not authenticated");
+      }
+
+      const order = await getOrderById(orderId);
+
+      await sendOrderInvoiceEmail(order, user.email, user.name || order.shippingInfo.fullName);
+
+      return { status: "success" };
 }
 
 export const getOrdersByUserId = async (userId: string) => {

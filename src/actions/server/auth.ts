@@ -1,7 +1,10 @@
 "use server"
 
+import { authOptions } from "@/lib/authOptions";
 import { getCollection } from "@/lib/dbConfig";
 import bycrypt from "bcryptjs";
+import { ObjectId } from "mongodb";
+import { getServerSession } from "next-auth";
 import type { User } from "next-auth";
 
 export const postUser = async (user: { name: string; email: string; password: string }) => {
@@ -63,4 +66,35 @@ export const signInUser = async (email: string, password: string): Promise<User>
             name: user.name,
             email: user.email,
       };
-}     
+}
+
+export const getCurrentUser = async () => {
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.id) {
+            throw new Error("User not authenticated");
+      }
+
+      if (!ObjectId.isValid(session.user.id)) {
+            throw new Error("Invalid user ID");
+      }
+
+      const user = await getCollection("USERS").findOne(
+            { _id: new ObjectId(session.user.id) },
+            { projection: { password: 0 } }
+      );
+
+      if (!user) {
+            throw new Error("User not found");
+      }
+
+      return {
+            _id: user._id.toString(),
+            name: user.name as string,
+            email: user.email as string,
+            image: (user.image as string | undefined) ?? null,
+            provider: user.provider as string,
+            role: user.role as string,
+            createdAt: user.createdAt as Date,
+      };
+}

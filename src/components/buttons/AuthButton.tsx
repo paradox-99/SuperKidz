@@ -16,7 +16,7 @@ const AuthButton = () => {
                                     <ul
                                           tabIndex={-1}
                                           className="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-32 p-2 shadow-sm">
-                                          <li><a>Profile</a></li>
+                                          <li><Link href="/profile">Profile</Link></li>
                                           <li><button onClick={() => signOut()}>Sign out</button></li>
                                     </ul>
                               </div>) :

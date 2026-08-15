@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { FiCheckCircle } from "react-icons/fi";
 import { getOrderById } from "@/actions/server/order";
+import ResendInvoiceButton from "@/components/buttons/ResendInvoiceButton";
 
 type OrderConfirmationProps = {
       params: Promise<{ id: string }>;
@@ -31,6 +32,10 @@ const OrderConfirmationPage = async ({ params }: OrderConfirmationProps) => {
                         <p className="text-base-content/70">
                               Order #{order._id.slice(-8).toUpperCase()} · {order.status}
                         </p>
+                        <div className="flex flex-col items-center gap-2 pt-1">
+                              <p className="text-sm text-base-content/60">An invoice has been emailed to you.</p>
+                              <ResendInvoiceButton orderId={order._id} />
+                        </div>
                   </div>
 
                   <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
