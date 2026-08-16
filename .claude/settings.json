@@ -7,7 +7,14 @@
       "Bash(node measure.js)",
       "Bash(node shot3.js)",
       "Bash(node -e \"const d = require\\('./src/data/toys.json'\\); console.log\\('items:', d.length\\); console.log\\(d.slice\\(-7\\).map\\(x=>x.title\\)\\);\")",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(timeout 40 bash -c 'until curl -sf http://localhost:3000 >/dev/null; do sleep 1; done')",
+      "Bash(find ~ -maxdepth 4 -iname \"*chromium*\" -path \"*ms-playwright*\" 2>/dev/null | head -20)",
+      "Read(//home/nayeem/**)",
+      "Bash(node \"/tmp/claude-1000/-home-nayeem-UIU-Web-dev-2-NextJS-super-kidz/52688053-7dc6-4de8-897e-d228687b1bf9/scratchpad/shot.mjs\")",
+      "Bash(NODE_PATH=/home/nayeem/.npm/_npx/e41f203b7505f1fb/node_modules node \"/tmp/claude-1000/-home-nayeem-UIU-Web-dev-2-NextJS-super-kidz/52688053-7dc6-4de8-897e-d228687b1bf9/scratchpad/shot.mjs\")",
+      "Bash(cp \"/tmp/claude-1000/-home-nayeem-UIU-Web-dev-2-NextJS-super-kidz/52688053-7dc6-4de8-897e-d228687b1bf9/scratchpad/shot.mjs\" /home/nayeem/.npm/_npx/e41f203b7505f1fb/shot.mjs)",
+      "Bash(node /home/nayeem/.npm/_npx/e41f203b7505f1fb/shot.mjs)"
     ]
   }
 }

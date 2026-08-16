@@ -12,13 +12,15 @@ type SendEmailOptions = {
       to: string;
       subject: string;
       html: string;
+      replyTo?: string;
 };
 
-export const sendEmail = async ({ to, subject, html }: SendEmailOptions) => {
+export const sendEmail = async ({ to, subject, html, replyTo }: SendEmailOptions) => {
       await transporter.sendMail({
             from: `"SuperKidz" <${process.env.EMAIL_USER}>`,
             to,
             subject,
             html,
+            replyTo,
       });
 };
