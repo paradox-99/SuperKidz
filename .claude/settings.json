@@ -5,7 +5,9 @@
       "Bash(npx playwright *)",
       "Bash(node shot.js)",
       "Bash(node measure.js)",
-      "Bash(node shot3.js)"
+      "Bash(node shot3.js)",
+      "Bash(node -e \"const d = require\\('./src/data/toys.json'\\); console.log\\('items:', d.length\\); console.log\\(d.slice\\(-7\\).map\\(x=>x.title\\)\\);\")",
+      "Bash(node -e ' *)"
     ]
   }
 }
