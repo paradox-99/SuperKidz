@@ -1,74 +1,103 @@
-# Hero Kidzz - Project Assets
-<img src="assets/hero.png">
-## Overview
+# Hero Kidzz
 
-Hero Kidzz is a small, single-vendor e-commerce web application designed for selling children's products. This repository contains all project assets including images, icons, and media files.
+A single-vendor e-commerce web app for selling children's products, built with Next.js.
+
+**Live:** [super-kidz-tau.vercel.app](https://super-kidz-tau.vercel.app)
 
 ## Features
 
-- 🛍️ **Product Catalog** - Browse children's toys and accessories
-- 🛒 **Shopping Cart** - Add and manage items
-- 💳 **Easy Checkout** - Cash on delivery or simulated online card payment (demo flow, no real gateway)
-- 📦 **Order Invoice** - Emailed invoice with resend option, payment status included
-- 👤 **User Accounts** - Save preferences and history
-- 🎨 **Responsive Design** - Mobile-friendly interface
-- ⭐ **Product Reviews** - Verified-purchaser ratings and comments, editable by their author
-- 🛠️ **Admin Panel** - Manage products, orders, users and reviews at `/admin`
+- **Product Catalog** — browse children's toys and accessories
+- **Shopping Cart** — add and manage items
+- **Checkout** — cash on delivery or simulated online card payment (demo flow, no real payment gateway)
+- **Order Invoices** — emailed invoice with a resend option, payment status included
+- **User Accounts** — email/password and Google sign-in, order history, saved preferences
+- **Product Reviews** — verified-purchaser ratings and comments, editable by their author
+- **Admin Panel** — manage products, orders, users, and reviews at `/admin`
+- **Route Protection** — proxy-based middleware enforcing auth and security headers
+- **Responsive Design** — mobile-friendly interface
 
-## Seeding sample data
+## Tech Stack
 
-```
-npm run seed:reviews
-```
+- [Next.js 16](https://nextjs.org/) (App Router) + React 19
+- TypeScript
+- Tailwind CSS + daisyUI
+- MongoDB (native driver)
+- NextAuth for authentication (credentials + Google)
+- Nodemailer for transactional email
 
-Populates the `reviews` collection with sample review data matching each product's catalog rating, so the storefront doesn't start empty. Requires `MONGODB_URI` and `DB_NAME` in `.env`. Safe to re-run.
+> **Note:** This project pins a pre-release/customized build of Next.js with breaking API changes from the version you may be familiar with. Before making framework-level changes, check the docs bundled in `node_modules/next/dist/docs/`.
 
-## Admin panel
+## Prerequisites
 
-```
-npm run admin:promote -- someone@example.com
-```
-
-Promotes an existing user to `role: "admin"`, unlocking `/admin` (dashboard, product CRUD, order status/payment updates, user role management, review moderation). The user must sign out and sign back in afterward, since role is only embedded in the session at sign-in.
-
-## Starter packages
-```
-npm install react-icons mongodb bcryptjs
-```
-
-## Colors
-
-```
- /* Brand */
-  --color-primary: oklch(65% 0.23 35);
-  --color-secondary: oklch(58% 0.18 30);
-  --color-accent: oklch(72% 0.20 55);
-
-  /* Base */
-  --color-base-100: oklch(100% 0 0);
-  --color-base-200: oklch(97% 0.01 95);
-  --color-base-300: oklch(92% 0.015 95);
-
-  /* Neutral */
-  --color-neutral: oklch(35% 0.01 260);
-  --color-neutral-content: oklch(96% 0 0);
-
-  /* Feedback */
-  --color-success: oklch(70% 0.17 145);
-  --color-error: oklch(62% 0.24 28);
-```
+- Node.js (LTS)
+- A MongoDB database (local or hosted, e.g. MongoDB Atlas)
+- A Google OAuth client (for Google sign-in)
+- An SMTP-capable email account (for order invoice emails)
 
 ## Getting Started
 
-1. Clone the repository
-2. Extract assets to your project directory
-3. Reference images in your application
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Create a `.env` file in the project root with the following variables:
+
+   ```env
+   MONGODB_URI=your_mongodb_connection_string
+   DB_NAME=your_database_name
+   GOOGLE_CLIENT_ID=your_google_oauth_client_id
+   GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+   NEXTAUTH_SECRET=a_random_secret_string
+   EMAIL_USER=your_email_address
+   EMAIL_PASS=your_email_app_password
+   ```
+
+3. Run the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Scripts
+
+| Command                    | Description                              |
+| --------------------------- | ----------------------------------------- |
+| `npm run dev`                | Start the development server             |
+| `npm run build`               | Build the app for production             |
+| `npm run start`               | Start the production server              |
+| `npm run lint`                | Run ESLint                               |
+| `npm run admin:promote`       | Promote a user to admin (see below)       |
+
+## Admin Panel
+
+```bash
+npm run admin:promote -- someone@example.com
+```
+
+Promotes an existing user to `role: "admin"`, unlocking `/admin` (dashboard, product CRUD, order status/payment updates, user role management, review moderation). The user must sign out and sign back in afterward, since the role is only embedded in the session at sign-in.
+
+## Project Structure
+
+```
+src/
+├── actions/       # Server actions
+├── app/           # App Router routes (pages, admin, api, auth, etc.)
+├── components/    # UI components (buttons, cards, layouts, pages, reviews, skeletons)
+├── data/          # Static/seed data
+├── fonts/         # Local font assets
+├── lib/           # Shared utilities (db, auth, mail, etc.)
+├── provider/      # React context providers
+└── proxy.ts       # Route protection & security headers middleware
+```
 
 ## Contributing
 
-Follow project guidelines when adding new assets.
+Follow existing code conventions and file structure when adding features. Keep changes scoped and avoid introducing new dependencies unless necessary.
 
 ## License
 
-All assets are proprietary to Hero Kidzz.
-# Hero-Kidz-assets
+All rights reserved. This project and its assets are proprietary to Hero Kidzz.

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import NavButton from "../buttons/NavButton";
 import Logo from "./Logo";
-import { FiShield, FiShoppingCart } from "react-icons/fi";
+import { FiShoppingCart } from "react-icons/fi";
 import AuthButton from "../buttons/AuthButton";
 import { getCartItemCountByUserId } from "@/actions/server/cart";
 import { getServerSession } from "next-auth";
@@ -56,13 +56,6 @@ const Navbar = async () => {
                         </ul>
                   </div>
                   <div className="navbar-end">
-                        {session?.user?.role === "admin" ? (
-                              <div className="btn btn-sm btn-ghost mr-2">
-                                    <Link href="/admin" className="flex items-center gap-1.5">
-                                          <FiShield /> Admin
-                                    </Link>
-                              </div>
-                        ) : null}
                         <div className="indicator mr-10">
                               {
                                     cartItemCount > 0 && <span className="indicator-item py-0.5 px-2 rounded-full status-success text-white text-[8px]">{cartItemCount}</span>
