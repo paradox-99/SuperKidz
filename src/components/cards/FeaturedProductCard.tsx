@@ -9,7 +9,7 @@ const FeaturedProductCard = ({ id, title, image, ratings, reviews, price, sold, 
 
       return (
             <article className="group relative flex flex-col overflow-hidden rounded-3xl bg-base-100 shadow-md ring-1 ring-base-200 transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
-                  <Link href={`/products/${id}`} className="relative block aspect-square overflow-hidden bg-base-200">
+                  <Link href={`/products/${id}`} className="relative block aspect-16/11 overflow-hidden bg-base-200">
                         <Image
                               src={image}
                               alt={title}
@@ -31,9 +31,9 @@ const FeaturedProductCard = ({ id, title, image, ratings, reviews, price, sold, 
                         </span>
                   </Link>
 
-                  <div className="flex flex-1 flex-col gap-3 p-4">
+                  <div className="flex flex-col gap-1.5 p-3">
                         <Link href={`/products/${id}`}>
-                              <h3 className="line-clamp-2 min-h-[2.5rem] font-bold leading-snug text-base-content transition hover:text-primary">
+                              <h3 className="truncate text-sm font-bold leading-snug text-base-content transition hover:text-primary">
                                     {title}
                               </h3>
                         </Link>
@@ -42,7 +42,7 @@ const FeaturedProductCard = ({ id, title, image, ratings, reviews, price, sold, 
                               {reviews} reviews &middot; {sold} sold
                         </p>
 
-                        <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+                        <div className="flex items-center justify-between gap-2 pt-1">
                               <div className="flex items-baseline gap-2">
                                     <span className="text-lg font-extrabold text-primary">৳{discountedPrice}</span>
                                     {discount ? (

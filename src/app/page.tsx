@@ -1,10 +1,10 @@
 import Banner from "@/components/pages/home/Banner";
 import Features from "@/components/pages/home/Features";
+import HowItWorks from "@/components/pages/home/HowItWorks";
 import FeaturedProducts from "@/components/pages/home/FeaturedProducts";
+import Testimonials from "@/components/pages/home/Testimonials";
 import CtaBand from "@/components/pages/home/CtaBand";
-import { authOptions } from "@/lib/authOptions";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
 
 const BASE_URL = 'https://super-kidz-tau.vercel.app';
 const HOME_PREVIEW = 'https://i.ibb.co/TBWX4mtp/Screenshot-from-2026-08-06-23-26-21.png';
@@ -36,13 +36,13 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 
-  const session = await getServerSession(authOptions);
-
   return (
     <div className="flex flex-col flex-1 items-center justify-center space-y-20">
       <Banner />
       <Features />
+      <HowItWorks />
       <FeaturedProducts />
+      <Testimonials />
       <CtaBand />
     </div>
   );

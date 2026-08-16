@@ -212,6 +212,48 @@ export const getReviewAggregates = async (productIds: string[]) => {
       );
 };
 
+export type Testimonial = {
+      _id: string;
+      userName: string;
+      userImage?: string;
+      rating: number;
+      comment: string;
+      productTitle: string;
+      verifiedPurchase: boolean;
+};
+
+export const getTopTestimonials = async (limit = 6): Promise<Testimonial[]> => {
+      const reviews = await getCollection("REVIEWS")
+            .find({ rating: { $gte: 4 }, comment: { $exists: true, $ne: "" } })
+            .sort({ rating: -1, createdAt: -1 })
+            .limit(limit)
+            .toArray();
+
+      if (reviews.length === 0) {
+            return [];
+      }
+
+      const productIds = [...new Set(reviews.map((review) => review.productId.toString()))]
+            .filter((id) => ObjectId.isValid(id))
+            .map((id) => new ObjectId(id));
+
+      const products = productIds.length > 0
+            ? await getCollection("PRODUCTS").find({ _id: { $in: productIds } }, { projection: { title: 1 } }).toArray()
+            : [];
+
+      const titleById = new Map(products.map((product) => [product._id.toString(), product.title as string]));
+
+      return reviews.map((review) => ({
+            _id: review._id.toString(),
+            userName: review.userName,
+            userImage: review.userImage,
+            rating: review.rating,
+            comment: review.comment,
+            productTitle: titleById.get(review.productId.toString()) ?? "SuperKidz product",
+            verifiedPurchase: review.verifiedPurchase,
+      }));
+};
+
 const ADMIN_REVIEWS_PAGE_SIZE = 20;
 
 export const getAllReviewsForAdmin = async (page = 1) => {

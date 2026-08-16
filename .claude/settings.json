@@ -3,7 +3,9 @@
     "allow": [
       "Bash(mkdir -p /tmp/claude-1000/-home-nayeem-UIU-Web-dev-2-NextJS-super-kidz/12f2d01b-4379-41ac-8361-f7e38e74ba4b/scratchpad/pw)",
       "Bash(npx playwright *)",
-      "Bash(node shot.js)"
+      "Bash(node shot.js)",
+      "Bash(node measure.js)",
+      "Bash(node shot3.js)"
     ]
   }
 }

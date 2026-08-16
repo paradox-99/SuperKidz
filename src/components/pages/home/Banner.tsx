@@ -11,11 +11,11 @@ const stats = [
 
 const Banner = () => {
       return (
-            <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-50 via-orange-50 to-rose-100 px-6 py-14 sm:px-10 md:py-20">
+            <div className="relative w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] overflow-hidden bg-linear-to-br from-amber-50 via-orange-50 to-rose-100 px-6 py-14 sm:px-10 md:py-20">
                   <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
                   <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
 
-                  <div className="relative flex flex-col-reverse items-center justify-between gap-12 md:flex-row">
+                  <div className="relative mx-auto flex max-w-6xl flex-col-reverse items-center justify-between gap-12 md:flex-row">
                         <div className="flex-1 space-y-6 text-center md:text-left">
                               <span className="badge badge-lg border-0 bg-primary/10 px-4 py-3 font-semibold text-primary">
                                     🎉 Trusted by 10,000+ Parents
