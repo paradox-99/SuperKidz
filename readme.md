@@ -1,4 +1,4 @@
-# Hero Kidzz
+# Super Kidzz
 
 A single-vendor e-commerce web app for selling children's products, built with Next.js.
 
@@ -24,8 +24,6 @@ A single-vendor e-commerce web app for selling children's products, built with N
 - MongoDB (native driver)
 - NextAuth for authentication (credentials + Google)
 - Nodemailer for transactional email
-
-> **Note:** This project pins a pre-release/customized build of Next.js with breaking API changes from the version you may be familiar with. Before making framework-level changes, check the docs bundled in `node_modules/next/dist/docs/`.
 
 ## Prerequisites
 
@@ -72,13 +70,6 @@ A single-vendor e-commerce web app for selling children's products, built with N
 | `npm run lint`                | Run ESLint                               |
 | `npm run admin:promote`       | Promote a user to admin (see below)       |
 
-## Admin Panel
-
-```bash
-npm run admin:promote -- someone@example.com
-```
-
-Promotes an existing user to `role: "admin"`, unlocking `/admin` (dashboard, product CRUD, order status/payment updates, user role management, review moderation). The user must sign out and sign back in afterward, since the role is only embedded in the session at sign-in.
 
 ## Project Structure
 
