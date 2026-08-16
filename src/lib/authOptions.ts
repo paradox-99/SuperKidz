@@ -1,3 +1,4 @@
+import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { signInUser } from "@/actions/server/auth";
@@ -15,7 +16,7 @@ if (!clientId || !clientSecret) {
   throw new Error("Missing Google client ID or secret in environment variables");
 }
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   secret: nextAuthSecret,
   // Configure one or more authentication providers
   providers: [

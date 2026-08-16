@@ -56,7 +56,7 @@ export const getProductReviews = async (productId: string) => {
 export const getReviewEligibility = async (productId: string) => {
       const { user } = await getServerSession(authOptions) ?? {};
 
-      if (!user || !ObjectId.isValid(user.id) || !ObjectId.isValid(productId)) {
+      if (!user || !user.id || !ObjectId.isValid(user.id) || !ObjectId.isValid(productId)) {
             return { signedIn: false, hasPurchased: false, existingReview: null };
       }
 
@@ -84,7 +84,7 @@ export const submitReview = async (productId: string, rating: number, comment: s
             throw new Error("User not authenticated");
       }
 
-      if (!ObjectId.isValid(user.id) || !ObjectId.isValid(productId)) {
+      if (!user.id || !ObjectId.isValid(user.id) || !ObjectId.isValid(productId)) {
             throw new Error("Invalid user ID or product ID");
       }
 
@@ -134,7 +134,7 @@ export const submitReview = async (productId: string, rating: number, comment: s
 export const updateReview = async (reviewId: string, rating: number, comment: string) => {
       const { user } = await getServerSession(authOptions) ?? {};
 
-      if (!user || !ObjectId.isValid(user.id) || !ObjectId.isValid(reviewId)) {
+      if (!user || !user.id || !ObjectId.isValid(user.id) || !ObjectId.isValid(reviewId)) {
             throw new Error("User not authenticated");
       }
 
@@ -169,7 +169,7 @@ export const updateReview = async (reviewId: string, rating: number, comment: st
 export const deleteReview = async (reviewId: string) => {
       const { user } = await getServerSession(authOptions) ?? {};
 
-      if (!user || !ObjectId.isValid(user.id) || !ObjectId.isValid(reviewId)) {
+      if (!user || !user.id || !ObjectId.isValid(user.id) || !ObjectId.isValid(reviewId)) {
             throw new Error("User not authenticated");
       }
 

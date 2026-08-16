@@ -74,7 +74,7 @@ export const createOrder = async (shippingInfo: ShippingInfo, payment: PaymentIn
             throw new Error("User not authenticated");
       }
 
-      if (!ObjectId.isValid(user.id)) {
+      if (!user.id || !ObjectId.isValid(user.id)) {
             throw new Error("Invalid user ID");
       }
 

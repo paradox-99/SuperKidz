@@ -37,7 +37,7 @@ export const addToCart = async (productId: string, quantity: number, image: stri
             throw new Error("User not authenticated");
       }
 
-      if (!ObjectId.isValid(user.id) || !ObjectId.isValid(productId)) {
+      if (!user.id || !ObjectId.isValid(user.id) || !ObjectId.isValid(productId)) {
             throw new Error("Invalid user ID or product ID");
       }
       try {
