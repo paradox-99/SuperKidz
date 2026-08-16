@@ -21,7 +21,15 @@ export type InvoiceOrder = {
       total: number;
       shippingInfo: InvoiceShippingInfo;
       status: string;
+      paymentMethod?: "cod" | "card";
+      paymentStatus?: "unpaid" | "paid" | "failed";
+      transactionId?: string;
       createdAt: Date;
+};
+
+const paymentMethodLabel: Record<"cod" | "card", string> = {
+      cod: "Cash on delivery",
+      card: "Card (Demo)",
 };
 
 const buildInvoiceHtml = (order: InvoiceOrder, recipientName: string) => {
@@ -63,6 +71,19 @@ const buildInvoiceHtml = (order: InvoiceOrder, recipientName: string) => {
                         <td style="padding:2px 0;"><strong>Status</strong></td>
                         <td style="padding:2px 0;text-transform:capitalize;">${order.status}</td>
                   </tr>
+                  <tr>
+                        <td style="padding:2px 0;"><strong>Payment Method</strong></td>
+                        <td style="padding:2px 0;">${paymentMethodLabel[order.paymentMethod ?? "cod"]}</td>
+                  </tr>
+                  <tr>
+                        <td style="padding:2px 0;"><strong>Payment Status</strong></td>
+                        <td style="padding:2px 0;text-transform:capitalize;">${order.paymentStatus ?? "unpaid"}</td>
+                  </tr>
+                  ${order.transactionId ? `
+                  <tr>
+                        <td style="padding:2px 0;"><strong>Transaction ID</strong></td>
+                        <td style="padding:2px 0;">${order.transactionId}</td>
+                  </tr>` : ""}
             </table>
 
             <table style="width:100%;border-collapse:collapse;font-size:14px;">
@@ -97,7 +118,11 @@ const buildInvoiceHtml = (order: InvoiceOrder, recipientName: string) => {
             </div>
 
             <p style="margin-top:24px;font-size:12px;color:#6b7280;">
-                  This is an automated invoice from SuperKidz. Payment is cash on delivery.
+                  This is an automated invoice from SuperKidz. ${
+                        order.paymentMethod === "card"
+                              ? "Payment was processed via our demo card payment flow."
+                              : "Payment is cash on delivery."
+                  }
             </p>
       </div>`;
 };

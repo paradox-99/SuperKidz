@@ -14,6 +14,12 @@ export const metadata: Metadata = {
       description: "View your SuperKidz account details and order history.",
 };
 
+const paymentStatusBadgeClass: Record<"unpaid" | "paid" | "failed", string> = {
+      unpaid: "badge-warning",
+      paid: "badge-success",
+      failed: "badge-error",
+};
+
 const ProfilePage = async () => {
       const session = await getServerSession(authOptions);
 
@@ -83,7 +89,12 @@ const ProfilePage = async () => {
                                                       </p>
                                                 </div>
                                                 <div className="flex items-center gap-4 sm:flex-col sm:items-end sm:gap-1">
-                                                      <span className="badge badge-outline capitalize">{order.status}</span>
+                                                      <div className="flex gap-2">
+                                                            <span className="badge badge-outline capitalize">{order.status}</span>
+                                                            <span className={`badge capitalize ${paymentStatusBadgeClass[order.paymentStatus]}`}>
+                                                                  {order.paymentStatus}
+                                                            </span>
+                                                      </div>
                                                       <p className="font-bold text-primary">৳{order.total.toFixed(2)}</p>
                                                 </div>
                                           </Link>

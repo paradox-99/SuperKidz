@@ -8,11 +8,19 @@ Hero Kidzz is a small, single-vendor e-commerce web application designed for sel
 
 - 🛍️ **Product Catalog** - Browse children's toys and accessories
 - 🛒 **Shopping Cart** - Add and manage items
-- 💳 **Easy Checkout** - Safe payment processing
-- 📦 **Order Invoice** - Monitor shipments
+- 💳 **Easy Checkout** - Cash on delivery or simulated online card payment (demo flow, no real gateway)
+- 📦 **Order Invoice** - Emailed invoice with resend option, payment status included
 - 👤 **User Accounts** - Save preferences and history
 - 🎨 **Responsive Design** - Mobile-friendly interface
-- ⭐ **Product Reviews** - Customer feedback system
+- ⭐ **Product Reviews** - Verified-purchaser ratings and comments, editable by their author
+
+## Seeding sample data
+
+```
+npm run seed:reviews
+```
+
+Populates the `reviews` collection with sample review data matching each product's catalog rating, so the storefront doesn't start empty. Requires `MONGODB_URI` and `DB_NAME` in `.env`. Safe to re-run.
 
 ## Starter packages
 ```

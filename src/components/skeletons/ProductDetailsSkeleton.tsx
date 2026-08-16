@@ -83,6 +83,23 @@ const ProductDetailsSkeleton = () => {
                               </div>
                         </div>
                   </div>
+
+                  <div className="rounded-4xl border border-base-200 bg-base-100 p-6 shadow-lg md:p-8">
+                        <div className="mb-6 flex items-center justify-between">
+                              <div className="skeleton h-8 w-48" />
+                              <div className="skeleton h-6 w-32" />
+                        </div>
+                        <div className="skeleton mb-6 h-32 w-full rounded-3xl" />
+                        <div className="space-y-4">
+                              {[...Array(2)].map((_, index) => (
+                                    <div key={index} className="rounded-2xl bg-base-200/70 p-5">
+                                          <div className="skeleton h-5 w-1/3" />
+                                          <div className="skeleton mt-3 h-4 w-full" />
+                                          <div className="skeleton mt-2 h-4 w-10/12" />
+                                    </div>
+                              ))}
+                        </div>
+                  </div>
             </section>
       );
 };

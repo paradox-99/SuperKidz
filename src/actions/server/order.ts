@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { getCollection } from "@/lib/dbConfig";
 import { ObjectId } from "mongodb";
 import { sendOrderInvoiceEmail } from "@/lib/orderInvoice";
+import { simulatePayment, type PaymentMethod, type PaymentStatus } from "@/lib/payment";
 
 export type ShippingInfo = {
       fullName: string;
@@ -12,6 +13,11 @@ export type ShippingInfo = {
       address: string;
       city: string;
       notes?: string;
+};
+
+export type PaymentInput = {
+      method: PaymentMethod;
+      last4?: string;
 };
 
 type OrderItemRecord = {
@@ -30,6 +36,10 @@ type OrderRecord = {
       total: number;
       shippingInfo: ShippingInfo;
       status: string;
+      paymentMethod?: PaymentMethod;
+      paymentStatus?: PaymentStatus;
+      transactionId?: string;
+      cardLast4?: string;
       createdAt: Date;
       updatedAt: Date;
 };
@@ -47,10 +57,14 @@ const normalizeOrder = (order: OrderRecord) => ({
       total: order.total,
       shippingInfo: order.shippingInfo,
       status: order.status,
+      paymentMethod: order.paymentMethod ?? "cod",
+      paymentStatus: order.paymentStatus ?? "unpaid",
+      transactionId: order.transactionId,
+      cardLast4: order.cardLast4,
       createdAt: order.createdAt,
 });
 
-export const createOrder = async (shippingInfo: ShippingInfo) => {
+export const createOrder = async (shippingInfo: ShippingInfo, payment: PaymentInput) => {
       const { user } = await getServerSession(authOptions) ?? {};
 
       if (!user) {
@@ -63,6 +77,20 @@ export const createOrder = async (shippingInfo: ShippingInfo) => {
 
       if (!shippingInfo.fullName || !shippingInfo.phone || !shippingInfo.address || !shippingInfo.city) {
             throw new Error("Missing required shipping details");
+      }
+
+      if (payment.method !== "cod" && payment.method !== "card") {
+            throw new Error("Invalid payment method");
+      }
+
+      if (payment.method === "card" && !/^\d{4}$/.test(payment.last4 ?? "")) {
+            throw new Error("Invalid card details");
+      }
+
+      const paymentResult = simulatePayment(payment);
+
+      if (!paymentResult.approved) {
+            throw new Error("Payment was declined. Please try a different card or choose cash on delivery.");
       }
 
       try {
@@ -89,6 +117,10 @@ export const createOrder = async (shippingInfo: ShippingInfo) => {
                   total: subtotal,
                   shippingInfo,
                   status: "pending",
+                  paymentMethod: payment.method,
+                  paymentStatus: paymentResult.status,
+                  transactionId: paymentResult.transactionId,
+                  cardLast4: payment.method === "card" ? payment.last4 : undefined,
                   createdAt: new Date(),
                   updatedAt: new Date(),
             };
@@ -106,6 +138,9 @@ export const createOrder = async (shippingInfo: ShippingInfo) => {
                                     total: order.total,
                                     shippingInfo: order.shippingInfo,
                                     status: order.status,
+                                    paymentMethod: order.paymentMethod,
+                                    paymentStatus: order.paymentStatus,
+                                    transactionId: order.transactionId,
                                     createdAt: order.createdAt,
                               },
                               user.email,

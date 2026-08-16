@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ObjectId } from "mongodb";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,7 +11,9 @@ import {
       FiStar,
 } from "react-icons/fi";
 import { getProductById } from "@/actions/server/product";
+import { getProductReviews, getReviewEligibility } from "@/actions/server/review";
 import CartButton from "@/components/buttons/CartButton";
+import ReviewSection from "@/components/reviews/ReviewSection";
 
 type ProductDetailsProps = {
       params: Promise<{ id: string }>;
@@ -75,6 +78,11 @@ const page = async ({ params }: ProductDetailsProps) => {
 
       const infoList = Array.isArray(product.info) ? product.info : [];
       const qnaList = Array.isArray(product.qna) ? product.qna : [];
+      const reviewsAvailable = ObjectId.isValid(id);
+
+      const [reviews, eligibility] = reviewsAvailable
+            ? await Promise.all([getProductReviews(id), getReviewEligibility(id)])
+            : [[], { signedIn: false, hasPurchased: false, existingReview: null }];
 
       return (
             <section className="space-y-10 py-6 md:py-10">
@@ -213,6 +221,20 @@ const page = async ({ params }: ProductDetailsProps) => {
                               </div>
                         </div>
                   ) : null}
+
+                  {reviewsAvailable ? (
+                        <ReviewSection
+                              productId={id}
+                              ratings={product.ratings}
+                              reviewCount={product.reviews}
+                              reviews={reviews}
+                              eligibility={eligibility}
+                        />
+                  ) : (
+                        <div className="rounded-4xl border border-base-200 bg-base-100 p-6 text-sm text-base-content/60 shadow-lg md:p-8">
+                              Reviews are not available for this product yet.
+                        </div>
+                  )}
             </section>
       );
 };

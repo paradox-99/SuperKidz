@@ -6,6 +6,17 @@ import { FiCheckCircle } from "react-icons/fi";
 import { getOrderById } from "@/actions/server/order";
 import ResendInvoiceButton from "@/components/buttons/ResendInvoiceButton";
 
+const paymentMethodLabel: Record<"cod" | "card", string> = {
+      cod: "Cash on delivery",
+      card: "Card (Demo)",
+};
+
+const paymentStatusBadgeClass: Record<"unpaid" | "paid" | "failed", string> = {
+      unpaid: "badge-warning",
+      paid: "badge-success",
+      failed: "badge-error",
+};
+
 type OrderConfirmationProps = {
       params: Promise<{ id: string }>;
 };
@@ -75,9 +86,25 @@ const OrderConfirmationPage = async ({ params }: OrderConfirmationProps) => {
                               </div>
 
                               <div className="flex justify-between border-t border-base-200 pt-4 text-sm text-base-content/70">
-                                    <span>Delivery</span>
-                                    <span className="font-semibold text-base-content">Cash on delivery</span>
+                                    <span>Payment</span>
+                                    <span className="font-semibold text-base-content">
+                                          {paymentMethodLabel[order.paymentMethod]}
+                                    </span>
                               </div>
+
+                              <div className="flex items-center justify-between text-sm text-base-content/70">
+                                    <span>Payment status</span>
+                                    <span className={`badge capitalize ${paymentStatusBadgeClass[order.paymentStatus]}`}>
+                                          {order.paymentStatus}
+                                    </span>
+                              </div>
+
+                              {order.transactionId ? (
+                                    <div className="flex items-center justify-between text-sm text-base-content/70">
+                                          <span>Transaction ID</span>
+                                          <span className="font-mono text-xs">{order.transactionId}</span>
+                                    </div>
+                              ) : null}
 
                               <div className="flex justify-between border-t border-base-200 pt-4 text-lg font-black">
                                     <span>Total</span>
