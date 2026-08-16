@@ -6,7 +6,7 @@ import { getCollection } from "./dbConfig";
 
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const nextAuthUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+const nextAuthUrl = process.env.NEXTAUTH_URL || "https://super-kidz-tau.vercel.app/";
 const nextAuthSecret = process.env.NEXTAUTH_SECRET || "super-kidz-dev-secret";
 
 process.env.NEXTAUTH_URL = nextAuthUrl;
