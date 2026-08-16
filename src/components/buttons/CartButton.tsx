@@ -6,7 +6,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const CartButton = ({ product }: {product: {id: string, title: string, image: string, price: number, discount?: number}}) => {
+interface CartButtonProps {
+      product: { id: string, title: string, image: string, price: number, discount?: number };
+      className?: string;
+      children?: React.ReactNode;
+}
+
+const CartButton = ({ product, className, children }: CartButtonProps) => {
 
       const router = useRouter();
       const session = useSession();
@@ -36,8 +42,8 @@ const CartButton = ({ product }: {product: {id: string, title: string, image: st
       };
 
       return (
-            <button onClick={handleAddToCart} className="btn btn-primary btn-outline w-1/2" disabled={loading}>
-                  Add to Cart
+            <button onClick={handleAddToCart} className={className ?? "btn btn-primary btn-outline w-1/2"} disabled={loading}>
+                  {children ?? "Add to Cart"}
             </button>
       );
 };

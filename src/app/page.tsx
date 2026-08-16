@@ -1,5 +1,7 @@
 import Banner from "@/components/pages/home/Banner";
-import Products from "@/components/pages/home/Products";
+import Features from "@/components/pages/home/Features";
+import FeaturedProducts from "@/components/pages/home/FeaturedProducts";
+import CtaBand from "@/components/pages/home/CtaBand";
 import { authOptions } from "@/lib/authOptions";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -39,7 +41,9 @@ export default async function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center space-y-20">
       <Banner />
-      <Products />
+      <Features />
+      <FeaturedProducts />
+      <CtaBand />
     </div>
   );
 }

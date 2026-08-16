@@ -68,6 +68,13 @@ export const getProducts = async (): Promise<ProductRecord[]> => {
       }
 }
 
+export const getFeaturedProducts = async (limit = 8): Promise<ProductRecord[]> => {
+      const products = await getProducts();
+      return [...products]
+            .sort((a, b) => b.ratings - a.ratings || b.sold - a.sold)
+            .slice(0, limit);
+};
+
 export const getProductById = async (id: string): Promise<ProductRecord | null> => {
       if (!ObjectId.isValid(id)) {
             const localProducts = toys.map((product, index) => normalizeProduct(product, `local-${index + 1}`));
