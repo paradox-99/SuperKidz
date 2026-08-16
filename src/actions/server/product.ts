@@ -3,7 +3,9 @@
 import { getCollection } from "@/lib/dbConfig";
 import { ObjectId } from "mongodb";
 import toys from "@/data/toys.json";
-import { getReviewAggregates } from "@/actions/server/review";
+import { getReviewAggregates, revalidateProduct } from "@/actions/server/review";
+import { requireAdmin } from "@/lib/adminAuth";
+import { revalidatePath } from "next/cache";
 
 type ProductRecord = {
       _id: string;
@@ -32,7 +34,7 @@ const normalizeProduct = (product: any, id: string, aggregate?: ReviewAggregate)
             ratings: hasReviews ? Math.min(5, Math.max(0, aggregate!.averageRating)) : Number(product.ratings) || 0,
             reviews: hasReviews ? aggregate!.reviewCount : Number(product.reviews) || 0,
             price: product.price,
-            sold: product.sold,
+            sold: Number(product.sold) || 0,
             description: product.description,
             bangla: product.bangla,
             info: product.info,
@@ -80,4 +82,120 @@ export const getProductById = async (id: string): Promise<ProductRecord | null> 
             const localProducts = toys.map((product, index) => normalizeProduct(product, `local-${index + 1}`));
             return localProducts.find((product) => product._id === id) ?? null;
       }
-} 
+}
+
+export type ProductInput = {
+      title: string;
+      image: string;
+      price: number;
+      bangla?: string;
+      description?: string;
+      discount?: number;
+      sold?: number;
+      info?: string[];
+      qna?: { question: string; answer: string }[];
+};
+
+const buildProductDoc = (input: ProductInput) => {
+      if (!input.title?.trim()) {
+            throw new Error("Title is required");
+      }
+      if (!input.image?.trim()) {
+            throw new Error("Image URL is required");
+      }
+      if (!Number.isFinite(input.price) || input.price <= 0) {
+            throw new Error("Price must be a positive number");
+      }
+      if (input.discount !== undefined && (!Number.isFinite(input.discount) || input.discount < 0 || input.discount > 100)) {
+            throw new Error("Discount must be between 0 and 100");
+      }
+      if (input.sold !== undefined && (!Number.isFinite(input.sold) || input.sold < 0)) {
+            throw new Error("Sold must be a non-negative number");
+      }
+
+      return {
+            title: input.title.trim(),
+            image: input.image.trim(),
+            price: input.price,
+            bangla: input.bangla?.trim() || undefined,
+            description: input.description?.trim() || undefined,
+            discount: input.discount || undefined,
+            sold: input.sold ?? 0,
+            info: (input.info ?? []).map((item) => item.trim()).filter(Boolean),
+            qna: (input.qna ?? []).filter((item) => item.question.trim() && item.answer.trim()).map((item) => ({
+                  question: item.question.trim(),
+                  answer: item.answer.trim(),
+            })),
+      };
+};
+
+export const createProduct = async (input: ProductInput) => {
+      await requireAdmin();
+
+      const product = buildProductDoc(input);
+
+      const result = await getCollection("PRODUCTS").insertOne({
+            ...product,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+      });
+
+      await revalidateProduct(result.insertedId.toString());
+      revalidatePath("/admin/products");
+
+      return { status: "success", productId: result.insertedId.toString() };
+};
+
+export const updateProduct = async (id: string, input: ProductInput) => {
+      await requireAdmin();
+
+      if (!ObjectId.isValid(id)) {
+            throw new Error("Invalid product ID");
+      }
+
+      const product = buildProductDoc(input);
+
+      const result = await getCollection("PRODUCTS").updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { ...product, updatedAt: new Date() } }
+      );
+
+      if (result.matchedCount === 0) {
+            throw new Error("Product not found");
+      }
+
+      await revalidateProduct(id);
+      revalidatePath("/admin/products");
+
+      return { status: "success" };
+};
+
+export const deleteProduct = async (id: string) => {
+      await requireAdmin();
+
+      if (!ObjectId.isValid(id)) {
+            throw new Error("Invalid product ID");
+      }
+
+      const result = await getCollection("PRODUCTS").deleteOne({ _id: new ObjectId(id) });
+
+      if (result.deletedCount === 0) {
+            throw new Error("Product not found");
+      }
+
+      await getCollection("CART").deleteMany({ productId: new ObjectId(id) });
+      await getCollection("REVIEWS").deleteMany({ productId: new ObjectId(id) });
+
+      await revalidateProduct(id);
+      revalidatePath("/admin/products");
+
+      return { status: "success" };
+};
+
+export const getAllProductsForAdmin = async (): Promise<ProductRecord[]> => {
+      await requireAdmin();
+
+      const products = await getCollection("PRODUCTS").find().sort({ createdAt: -1 }).toArray();
+
+      return products.map((product) => normalizeProduct(product, product._id.toString()));
+};

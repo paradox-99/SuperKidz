@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 import { getProductById } from "@/actions/server/product";
 import { getProductReviews, getReviewEligibility } from "@/actions/server/review";
+import BuyNowButton from "@/components/buttons/BuyNowButton";
 import CartButton from "@/components/buttons/CartButton";
 import ReviewSection from "@/components/reviews/ReviewSection";
 
@@ -167,7 +168,7 @@ const page = async ({ params }: ProductDetailsProps) => {
 
                               <div className="grid gap-3 sm:grid-cols-2">
                                     <CartButton product={{id: id.toString(), title: product.title, image: product.image, price: product.price, discount: product.discount}} />
-                                    <button className="btn btn-outline btn-lg">Buy Now</button>
+                                    <BuyNowButton product={{id: id.toString(), title: product.title, image: product.image, price: product.price, discount: product.discount}} />
                               </div>
 
                               {product.description ? (

@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const protectedPrefixes = ["/profile", "/checkout", "/orders"];
+const protectedPrefixes = ["/profile", "/checkout", "/orders", "/admin"];
+const adminOnlyPrefixes = ["/admin"];
 const authOnlyRoutes = ["/signin", "/signup"];
 
 const matchesPrefix = (pathname: string, prefixes: string[]) =>
@@ -30,6 +31,10 @@ export default async function proxy(request: NextRequest) {
                   const signInUrl = new URL("/signin", request.url);
                   signInUrl.searchParams.set("callbackUrl", `${pathname}${search}`);
                   return setSecurityHeaders(NextResponse.redirect(signInUrl));
+            }
+
+            if (token && matchesPrefix(pathname, adminOnlyPrefixes) && token.role !== "admin") {
+                  return setSecurityHeaders(NextResponse.redirect(new URL("/", request.url)));
             }
 
             if (isAuthOnlyRoute && token) {

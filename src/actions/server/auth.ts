@@ -65,7 +65,8 @@ export const signInUser = async (email: string, password: string): Promise<User>
             id: user._id.toString(),
             name: user.name,
             email: user.email,
-      };
+            role: user.role,
+      } as User;
 }
 
 export const getCurrentUser = async () => {

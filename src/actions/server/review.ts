@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { getCollection } from "@/lib/dbConfig";
 import { ObjectId } from "mongodb";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/adminAuth";
 
 type ReviewRecord = {
       _id: ObjectId;
@@ -33,7 +34,7 @@ const normalizeReview = (review: ReviewRecord) => ({
       createdAt: review.createdAt,
 });
 
-const revalidateProduct = (productId: string) => {
+export const revalidateProduct = async (productId: string) => {
       revalidatePath("/");
       revalidatePath("/products");
       revalidatePath(`/products/${productId}`);
@@ -125,7 +126,7 @@ export const submitReview = async (productId: string, rating: number, comment: s
             throw new Error("Failed to submit review");
       }
 
-      revalidateProduct(productId);
+      await revalidateProduct(productId);
 
       return { status: "success" };
 };
@@ -160,7 +161,7 @@ export const updateReview = async (reviewId: string, rating: number, comment: st
             { $set: { rating, comment: comment.trim(), updatedAt: new Date() } }
       );
 
-      revalidateProduct(review.productId.toString());
+      await revalidateProduct(review.productId.toString());
 
       return { status: "success" };
 };
@@ -184,7 +185,7 @@ export const deleteReview = async (reviewId: string) => {
 
       await getCollection("REVIEWS").deleteOne({ _id: new ObjectId(reviewId) });
 
-      revalidateProduct(review.productId.toString());
+      await revalidateProduct(review.productId.toString());
 
       return { status: "success" };
 };
@@ -209,4 +210,59 @@ export const getReviewAggregates = async (productIds: string[]) => {
                   { averageRating: result.averageRating as number, reviewCount: result.reviewCount as number },
             ])
       );
+};
+
+const ADMIN_REVIEWS_PAGE_SIZE = 20;
+
+export const getAllReviewsForAdmin = async (page = 1) => {
+      await requireAdmin();
+
+      const safePage = Number.isInteger(page) && page > 0 ? page : 1;
+      const skip = (safePage - 1) * ADMIN_REVIEWS_PAGE_SIZE;
+
+      const [reviews, total] = await Promise.all([
+            getCollection("REVIEWS").find().sort({ createdAt: -1 }).skip(skip).limit(ADMIN_REVIEWS_PAGE_SIZE).toArray(),
+            getCollection("REVIEWS").countDocuments(),
+      ]);
+
+      const productIds = [...new Set(reviews.map((review) => review.productId.toString()))]
+            .filter((id) => ObjectId.isValid(id))
+            .map((id) => new ObjectId(id));
+
+      const products = productIds.length > 0
+            ? await getCollection("PRODUCTS").find({ _id: { $in: productIds } }, { projection: { title: 1 } }).toArray()
+            : [];
+
+      const titleById = new Map(products.map((product) => [product._id.toString(), product.title as string]));
+
+      return {
+            reviews: reviews.map((review) => ({
+                  ...normalizeReview(review as unknown as ReviewRecord),
+                  productTitle: titleById.get(review.productId.toString()) ?? "Unknown product",
+            })),
+            total,
+            page: safePage,
+            pageSize: ADMIN_REVIEWS_PAGE_SIZE,
+      };
+};
+
+export const adminDeleteReview = async (reviewId: string) => {
+      await requireAdmin();
+
+      if (!ObjectId.isValid(reviewId)) {
+            throw new Error("Invalid review ID");
+      }
+
+      const review = await getCollection("REVIEWS").findOne({ _id: new ObjectId(reviewId) });
+
+      if (!review) {
+            throw new Error("Review not found");
+      }
+
+      await getCollection("REVIEWS").deleteOne({ _id: new ObjectId(reviewId) });
+
+      await revalidateProduct(review.productId.toString());
+      revalidatePath("/admin/reviews");
+
+      return { status: "success" };
 };

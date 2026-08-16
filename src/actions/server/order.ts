@@ -6,6 +6,8 @@ import { getCollection } from "@/lib/dbConfig";
 import { ObjectId } from "mongodb";
 import { sendOrderInvoiceEmail } from "@/lib/orderInvoice";
 import { simulatePayment, type PaymentMethod, type PaymentStatus } from "@/lib/payment";
+import { requireAdmin } from "@/lib/adminAuth";
+import { revalidatePath } from "next/cache";
 
 export type ShippingInfo = {
       fullName: string;
@@ -46,6 +48,7 @@ type OrderRecord = {
 
 const normalizeOrder = (order: OrderRecord) => ({
       _id: order._id.toString(),
+      userId: order.userId.toString(),
       items: order.items.map((item) => ({
             productId: item.productId.toString(),
             name: item.name,
@@ -208,3 +211,89 @@ export const getOrdersByUserId = async (userId: string) => {
 
       return orders.map((order) => normalizeOrder(order as unknown as OrderRecord));
 }
+
+const withCustomerInfo = async (orders: ReturnType<typeof normalizeOrder>[]) => {
+      const userIds = [...new Set(orders.map((order) => order.userId))]
+            .filter((id) => ObjectId.isValid(id))
+            .map((id) => new ObjectId(id));
+
+      const users = userIds.length > 0
+            ? await getCollection("USERS").find({ _id: { $in: userIds } }, { projection: { name: 1, email: 1 } }).toArray()
+            : [];
+
+      const userById = new Map(users.map((user) => [user._id.toString(), { name: user.name as string, email: user.email as string }]));
+
+      return orders.map((order) => ({
+            ...order,
+            customerName: userById.get(order.userId)?.name ?? "Unknown customer",
+            customerEmail: userById.get(order.userId)?.email ?? "",
+      }));
+};
+
+export const getAllOrders = async () => {
+      await requireAdmin();
+
+      const orders = await getCollection("ORDERS").find().sort({ createdAt: -1 }).toArray();
+
+      return withCustomerInfo(orders.map((order) => normalizeOrder(order as unknown as OrderRecord)));
+};
+
+export const getOrderByIdForAdmin = async (orderId: string) => {
+      await requireAdmin();
+
+      if (!ObjectId.isValid(orderId)) {
+            throw new Error("Invalid order ID");
+      }
+
+      const order = await getCollection("ORDERS").findOne({ _id: new ObjectId(orderId) });
+
+      if (!order) {
+            throw new Error("Order not found");
+      }
+
+      const [withInfo] = await withCustomerInfo([normalizeOrder(order as unknown as OrderRecord)]);
+
+      return withInfo;
+};
+
+const orderStatuses = ["pending", "processing", "shipped", "delivered", "cancelled"] as const;
+const orderPaymentStatuses = ["unpaid", "paid", "failed"] as const;
+
+export const updateOrderStatus = async (
+      orderId: string,
+      update: { status?: string; paymentStatus?: string }
+) => {
+      await requireAdmin();
+
+      if (!ObjectId.isValid(orderId)) {
+            throw new Error("Invalid order ID");
+      }
+
+      if (update.status !== undefined && !orderStatuses.includes(update.status as typeof orderStatuses[number])) {
+            throw new Error("Invalid order status");
+      }
+
+      if (update.paymentStatus !== undefined && !orderPaymentStatuses.includes(update.paymentStatus as typeof orderPaymentStatuses[number])) {
+            throw new Error("Invalid payment status");
+      }
+
+      const setFields: Record<string, unknown> = { updatedAt: new Date() };
+      if (update.status !== undefined) setFields.status = update.status;
+      if (update.paymentStatus !== undefined) setFields.paymentStatus = update.paymentStatus;
+
+      const result = await getCollection("ORDERS").updateOne(
+            { _id: new ObjectId(orderId) },
+            { $set: setFields }
+      );
+
+      if (result.matchedCount === 0) {
+            throw new Error("Order not found");
+      }
+
+      revalidatePath("/admin/orders");
+      revalidatePath(`/admin/orders/${orderId}`);
+      revalidatePath(`/orders/${orderId}`);
+      revalidatePath("/profile");
+
+      return { status: "success" };
+};
